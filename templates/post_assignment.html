@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0b86eb;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            background-color: #9dd1da;
+            padding: 10px 0;
+            border-radius: 5px;
+        }
+        .navbar a {
+            margin: 0 15px;
+            color: #333;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            color: #007bff;
+        }
+        .course-list {
+            margin-top: 20px;
+        }
+        .course-box {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            max-width: 450px;
+            margin-left: 350px;
+        }
+        .course-box h2 {
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .course-box form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .course-box form input,
+        .course-box form textarea,
+        .course-box form select {
+            width: calc(100% - 20px); /* Adjusted width to consider padding */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .course-box form select {
+            width: 100%; /* Select elements should take full width */
+        }
+        .course-box form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-left: 160px;
+        }
+        .course-box form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+        <form action="{{ url_for('logout') }}" method="POST" class="logout-button">
+            <button type="submit">Logout</button>
+        </form>
+        <div class="navbar">
+            <a href="/homeinstructor">Home</a>
+            <a href="/postcourse">Post Course</a>
+            <a href="/postassignment">Post Assignment</a>
+            <a href="/view_enrolled_students">View Enrolled Students</a>
+        </div>
+        <div class="course-list">
+            <div class="course-box">
+                <h2>New Assignment</h2>
+                <form id="assignment-form" method="post" action="/postassignment">
+                    <label for="assignmentid">Assignment ID:</label>
+                    <input type="number" id="assignmentid" name="assignmentid" placeholder="Enter assignment ID" required>
+                
+                    <label for="title">Assignment Title:</label>
+                    <input type="text" id="title" name="title" placeholder="Enter assignment title" required>
+                
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Enter course description" required></textarea>
+                
+                    <label for="submission_date">Submission Date:</label>
+                    <input type="date" id="submission_date" name="submission_date" required>
+                
+                    <label for="marks">Marks:</label>
+                    <input type="number" id="marks" name="marks" placeholder="Enter maximum marks" required>
+                
+                    <label for="course_id">Course ID:</label>
+                    <input type="text" id="course_id" name="course_id" placeholder="Enter course ID" required>
+                
+                    <button type="submit">Submit Assignment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

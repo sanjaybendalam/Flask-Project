@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0b86eb;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            background-color: #9dd1da;
+            padding: 10px 0;
+            border-radius: 5px;
+        }
+        .navbar a {
+            margin: 0 15px;
+            color: #333;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            color: #007bff;
+        }
+        .course-list {
+            margin-top: 20px;
+        }
+        .course-box {
+            position: relative; /* Added to position the unenroll button */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .course-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .course-box p {
+            color: #666;
+        }
+        .logout-button {
+            margin-left: auto;
+        }
+        .enroll-button,
+        .unenroll-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .enroll-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .enroll-button:hover {
+            background-color: #0056b3;
+        }
+        .unenroll-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .unenroll-button:hover {
+            background-color: #c82333;
+        }
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background-color: #f2f2f2;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Centering the message */
+        .no-courses-message {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+        <form action="{{ url_for('logout') }}" method="POST" class="logout-button">
+            <button type="submit">Logout</button>
+        </form>
+        <div class="navbar">
+            <a href="/homeinstructor">Home</a>
+            <a href="/postcourse">Post Course</a>
+            <a href="/postassignment">Post Assignment</a>
+            <a href="/view_enrolled_students">View Enrolled Students</a>
+        </div>
+        <form action="{{ url_for('view_enrolled_students') }}" method="post" style="margin-top: 20px;">
+            <label for="course_select">Select Course:</label>
+            <select id="course_select" name="course_id">
+                {% for course in courses %}
+                    <option value="{{ course[0] }}">{{ course[1] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">View Enrolled Students</button>
+        </form>
+
+        <div class="course-list">
+            {% if enrolled_students %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Student Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in enrolled_students %}
+                        <tr>
+                            <td>{{ student[2] }}</td>
+                            <td>{{ student[3] }}</td>
+                            <td>{{ student[4] }}</td>
+                            <td>{{ student[5] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-courses-message">No enrolled students for the selected course.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

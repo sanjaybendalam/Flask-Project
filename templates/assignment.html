@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0b86eb;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            background-color: #9dd1da;
+            padding: 10px 0;
+            border-radius: 5px;
+        }
+        .navbar a {
+            margin: 0 15px;
+            color: #333;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            color: #007bff;
+        }
+        .course-list {
+            margin-top: 20px;
+        }
+        .course-box {
+            position: relative; /* Added to position the upload button */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .course-box h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .course-box p {
+            color: #666;
+        }
+        .logout-button {
+            margin-left: auto;
+        }
+        .upload-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: #fff;
+        }
+        .upload-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ username }}!</h1>
+        <form action="{{ url_for('logout') }}" method="POST" class="logout-button">
+            <button type="submit">Logout</button>
+        </form>
+        <div class="navbar">
+            <a href="/home">Home</a>
+            <a href="/mycourses">My Courses</a>
+            <a href="/assignments">View Assignments</a>
+        </div>
+
+        <div class="course-list">
+            {% if assignments %}
+                <h2>Assignments</h2>
+                {% for assignment in assignments %}
+                <div class="course-box">
+                    <h2>{{ assignment[1] }}</h2>
+                    <p>{{ assignment[2] }}</p>
+                    <p>Submission Date: {{ assignment[3] }}</p>
+                    <form action="{{ url_for('upload_assignment') }}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="assignment_id" value="{{ assignment[0] }}">
+                        <input type="hidden" name="student_id" value="{{username }}">
+                        <input type="file" name="file" accept=".pdf,.doc,.docx">
+                        <button type="submit" class="upload-button">Upload</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No Assignments yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
